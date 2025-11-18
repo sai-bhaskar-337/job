@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobMatch AI - Advanced Resume Analyzer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --border: #dee2e6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fb;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 25px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+        
+        nav ul li a:hover {
+            opacity: 0.8;
+        }
+        
+        .hero {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(rgba(67, 97, 238, 0.05), rgba(58, 12, 163, 0.05));
+        }
+        
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: var(--gray);
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-size: 1rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .section {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: var(--secondary);
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 10px;
+            padding: 50px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .upload-area:hover, .upload-area.active {
+            border-color: var(--primary);
+            background-color: rgba(67, 97, 238, 0.03);
+        }
+        
+        .upload-area i {
+            font-size: 48px;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+        
+        .upload-area.active i {
+            color: var(--primary);
+        }
+        
+        .file-info {
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .platforms {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+        
+        .platform {
+            background-color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .platform:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .platform.selected {
+            border-color: var(--primary);
+        }
+        
+        .platform-logo {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--secondary);
+        }
+        
+        .job-card {
+            border-left: 4px solid var(--primary);
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+        
+        .job-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .job-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+        
+        .match-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .match-100 {
+            background-color: #2ecc71;
+        }
+        
+        .match-95 {
+            background-color: #4cc9f0;
+        }
+        
+        .match-90 {
+            background-color: #3498db;
+        }
+        
+        .match-85 {
+            background-color: #f39c12;
+        }
+        
+        .match-80 {
+            background-color: #e67e22;
+        }
+        
+        .match-75 {
+            background-color: #e74c3c;
+        }
+        
+        .company-info {
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+        
+        .job-details {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .job-detail {
+            display: flex;
+            align-items: center;
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+        
+        .job-detail i {
+            margin-right: 5px;
+            color: var(--primary);
+        }
+        
+        .job-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .apply-btn {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .save-btn {
+            background-color: #eee;
+            color: #555;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            border-radius: 4px;
+        }
+        
+        .progress-100 {
+            background-color: #2ecc71;
+            width: 100%;
+        }
+        
+        .progress-95 {
+            background-color: #4cc9f0;
+            width: 95%;
+        }
+        
+        .progress-90 {
+            background-color: #3498db;
+            width: 90%;
+        }
+        
+        .progress-85 {
+            background-color: #f39c12;
+            width: 85%;
+        }
+        
+        .progress-80 {
+            background-color: #e67e22;
+            width: 80%;
+        }
+        
+        .progress-75 {
+            background-color: #e74c3c;
+            width: 75%;
+        }
+        
+        .analysis-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .analysis-item {
+            text-align: center;
+        }
+        
+        .analysis-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .analysis-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+        
+        footer {
+            background-color: var(--secondary);
+            color: white;
+            padding: 40px 0;
+            margin-top: 50px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .ai-badge i {
+            margin-right: 5px;
+        }
+        
+        .resume-preview {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid var(--primary);
+            display: none;
+        }
+        
+        .resume-preview h3 {
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+        
+        .resume-preview-content {
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--gray);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .loading-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 15px;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .job-header {
+                flex-direction: column;
+            }
+            
+            .match-badge {
+                margin-top: 10px;
+                align-self: flex-start;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-links {
+                margin: 20px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    <span>JobMatch AI</span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>AI-Powered Job Matching</h1>
+            <p>Upload your resume and our AI will scan thousands of job listings across all major portals to find your perfect match</p>
+            <a href="#upload" class="btn btn-primary">Get Started <i class="fas fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <div class="container">
+        <section id="upload" class="section">
+            <h2 class="section-title">Upload Your Resume</h2>
+            <div class="card">
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Drag & Drop your resume here</h3>
+                    <p>or</p>
+                    <input type="file" id="resumeUpload" accept=".pdf,.doc,.docx,.txt" style="display: none;">
+                    <button class="btn btn-outline" id="browseBtn">Browse Files</button>
+                    <div class="file-info" id="fileInfo">Supported formats: PDF, DOC, DOCX, TXT (Max 5MB)</div>
+                </div>
+                
+                <div class="resume-preview" id="resumePreview">
+                    <h3>Resume Preview</h3>
+                    <div class="resume-preview-content" id="resumePreviewContent"></div>
+                </div>
+                
+                <h3 style="margin: 30px 0 15px;">Select Job Platforms to Scan</h3>
+                <div class="platforms">
+                    <div class="platform selected" data-platform="naukri">
+                        <div class="platform-logo">N</div>
+                        <span>Naukri</span>
+                    </div>
+                    <div class="platform selected" data-platform="linkedin">
+                        <div class="platform-logo">L</div>
+                        <span>LinkedIn</span>
+                    </div>
+                    <div class="platform selected" data-platform="glassdoor">
+                        <div class="platform-logo">G</div>
+                        <span>Glassdoor</span>
+                    </div>
+                    <div class="platform selected" data-platform="indeed">
+                        <div class="platform-logo">I</div>
+                        <span>Indeed</span>
+                    </div>
+                    <div class="platform" data-platform="monster">
+                        <div class="platform-logo">M</div>
+                        <span>Monster</span>
+                    </div>
+                    <div class="platform" data-platform="shine">
+                        <div class="platform-logo">S</div>
+                        <span>Shine</span>
+                    </div>
+                    <div class="platform" data-platform="timesjobs">
+                        <div class="platform-logo">T</div>
+                        <span>TimesJobs</span>
+                    </div>
+                    <div class="platform" data-platform="foundit">
+                        <div class="platform-logo">F</div>
+                        <span>Foundit</span>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" id="analyzeBtn">
+                        <i class="fas fa-search"></i> Scan Job Portals & Analyze Matches
+                    </button>
+                    <span class="ai-badge"><i class="fas fa-brain"></i> AI POWERED</span>
+                </div>
+            </div>
+            
+            <div class="loading" id="loadingIndicator">
+                <div class="loading-spinner"></div>
+                <h3>Analyzing your resume and scanning job portals...</h3>
+                <p>This may take a few moments as we search through thousands of listings</p>
+            </div>
+        </section>
+
+        <section class="section" id="results" style="display: none;">
+            <h2 class="section-title">Your Job Matches</h2>
+            
+            <div class="card">
+                <div class="analysis-info">
+                    <div class="analysis-item">
+                        <div class="analysis-value" id="totalJobs">0</div>
+                        <div class="analysis-label">Jobs Found</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-value" id="avgMatch">0%</div>
+                        <div class="analysis-label">Avg. Match</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-value" id="perfectMatches">0</div>
+                        <div class="analysis-label">Perfect Matches</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-value" id="platformsScanned">0</div>
+                        <div class="analysis-label">Platforms Scanned</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" id="jobResultsContainer">
+                <!-- Job results will be dynamically inserted here -->
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    <span>JobMatch AI</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="copyright">
+                    &copy; 2023 JobMatch AI. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Job database with different roles and companies
+        const jobDatabase = {
+            "software": [
+                {
+                    title: "Senior Full Stack Developer",
+                    company: "TechSolutions Inc.",
+                    location: "Bangalore, India",
+                    type: "Full Time",
+                    experience: "5-8 years",
+                    salary: "₹18-25 LPA",
+                    platforms: ["LinkedIn", "Naukri", "Glassdoor"],
+                    match: 95
+                },
+                {
+                    title: "Frontend React Developer",
+                    company: "Digital Innovations Ltd.",
+                    location: "Hyderabad, India",
+                    type: "Full Time",
+                    experience: "3-5 years",
+                    salary: "₹12-18 LPA",
+                    platforms: ["Naukri", "Indeed"],
+                    match: 88
+                },
+                {
+                    title: "Backend Node.js Engineer",
+                    company: "CloudSystems Corp.",
+                    location: "Remote",
+                    type: "Full Time",
+                    experience: "4-7 years",
+                    salary: "₹15-22 LPA",
+                    platforms: ["LinkedIn", "Glassdoor", "Indeed"],
+                    match: 92
+                }
+            ],
+            "data": [
+                {
+                    title: "Data Scientist",
+                    company: "Analytics Pro",
+                    location: "Mumbai, India",
+                    type: "Full Time",
+                    experience: "3-6 years",
+                    salary: "₹16-24 LPA",
+                    platforms: ["LinkedIn", "Naukri"],
+                    match: 90
+                },
+                {
+                    title: "Machine Learning Engineer",
+                    company: "AI Innovations",
+                    location: "Bangalore, India",
+                    type: "Full Time",
+                    experience: "4-7 years",
+                    salary: "₹18-26 LPA",
+                    platforms: ["LinkedIn", "Glassdoor", "Indeed"],
+                    match: 85
+                },
+                {
+                    title: "Data Analyst",
+                    company: "Business Insights Ltd.",
+                    location: "Delhi, India",
+                    type: "Full Time",
+                    experience: "2-4 years",
+                    salary: "₹10-15 LPA",
+                    platforms: ["Naukri", "Indeed"],
+                    match: 82
+                }
+            ],
+            "devops": [
+                {
+                    title: "Site Reliability Engineering Manager",
+                    company: "Wikimedia Foundation",
+                    location: "Remote",
+                    type: "Full Time",
+                    experience: "9+ years",
+                    salary: "Competitive",
+                    platforms: ["LinkedIn", "Glassdoor"],
+                    match: 90
+                },
+                {
+                    title: "Senior DevOps Engineer",
+                    company: "TechCorp Solutions",
+                    location: "Bangalore, India",
+                    type: "Full Time",
+                    experience: "5-8 years",
+                    salary: "₹18-25 LPA",
+                    platforms: ["Naukri", "LinkedIn", "Glassdoor"],
+                    match: 95
+                },
+                {
+                    title: "Cloud Infrastructure Engineer",
+                    company: "AWS Solutions",
+                    location: "Remote",
+                    type: "Full Time",
+                    experience: "4-7 years",
+                    salary: "₹16-22 LPA",
+                    platforms: ["LinkedIn", "Indeed"],
+                    match: 87
+                }
+            ],
+            "marketing": [
+                {
+                    title: "Digital Marketing Manager",
+                    company: "BrandBoost Agency",
+                    location: "Mumbai, India",
+                    type: "Full Time",
+                    experience: "5-8 years",
+                    salary: "₹12-18 LPA",
+                    platforms: ["Naukri", "LinkedIn"],
+                    match: 88
+                },
+                {
+                    title: "Content Marketing Specialist",
+                    company: "Creative Content Co.",
+                    location: "Remote",
+                    type: "Full Time",
+                    experience: "2-4 years",
+                    salary: "₹8-12 LPA",
+                    platforms: ["Indeed", "Glassdoor"],
+                    match: 85
+                },
+                {
+                    title: "SEO Analyst",
+                    company: "SearchEngine Pros",
+                    location: "Delhi, India",
+                    type: "Full Time",
+                    experience: "3-5 years",
+                    salary: "₹10-15 LPA",
+                    platforms: ["Naukri", "Indeed"],
+                    match: 80
+                }
+            ],
+            "finance": [
+                {
+                    title: "Financial Analyst",
+                    company: "Wealth Management Inc.",
+                    location: "Mumbai, India",
+                    type: "Full Time",
+                    experience: "3-6 years",
+                    salary: "₹14-20 LPA",
+                    platforms: ["LinkedIn", "Naukri"],
+                    match: 85
+                },
+                {
+                    title: "Investment Banking Associate",
+                    company: "Global Finance Corp.",
+                    location: "Mumbai, India",
+                    type: "Full Time",
+                    experience: "4-7 years",
+                    salary: "₹20-30 LPA",
+                    platforms: ["LinkedIn", "Glassdoor"],
+                    match: 82
+                },
+                {
+                    title: "Accounting Manager",
+                    company: "Business Solutions Ltd.",
+                    location: "Delhi, India",
+                    type: "Full Time",
+                    experience: "5-8 years",
+                    salary: "₹15-22 LPA",
+                    platforms: ["Naukri", "Indeed"],
+                    match: 78
+                }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadArea = document.getElementById('uploadArea');
+            const resumeUpload = document.getElementById('resumeUpload');
+            const browseBtn = document.getElementById('browseBtn');
+            const fileInfo = document.getElementById('fileInfo');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const platforms = document.querySelectorAll('.platform');
+            const resultsSection = document.getElementById('results');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const jobResultsContainer = document.getElementById('jobResultsContainer');
+            const resumePreview = document.getElementById('resumePreview');
+            const resumePreviewContent = document.getElementById('resumePreviewContent');
+            
+            let uploadedFile = null;
+            let selectedPlatforms = ['naukri', 'linkedin', 'glassdoor', 'indeed'];
+
+            // File upload functionality
+            browseBtn.addEventListener('click', function() {
+                resumeUpload.click();
+            });
+            
+            resumeUpload.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    uploadedFile = this.files[0];
+                    const fileName = uploadedFile.name;
+                    fileInfo.textContent = `Selected: ${fileName}`;
+                    uploadArea.classList.add('active');
+                    
+                    // Show resume preview (simulated)
+                    showResumePreview(uploadedFile);
+                }
+            });
+            
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('active');
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                uploadArea.classList.remove('active');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('active');
+                
+                if (e.dataTransfer.files.length > 0) {
+                    uploadedFile = e.dataTransfer.files[0];
+                    const fileName = uploadedFile.name;
+                    fileInfo.textContent = `Selected: ${fileName}`;
+                    uploadArea.classList.add('active');
+                    
+                    // Show resume preview (simulated)
+                    showResumePreview(uploadedFile);
+                }
+            });
+            
+            // Platform selection
+            platforms.forEach(platform => {
+                platform.addEventListener('click', function() {
+                    this.classList.toggle('selected');
+                    const platformName = this.getAttribute('data-platform');
+                    
+                    if (this.classList.contains('selected')) {
+                        if (!selectedPlatforms.includes(platformName)) {
+                            selectedPlatforms.push(platformName);
+                        }
+                    } else {
+                        selectedPlatforms = selectedPlatforms.filter(p => p !== platformName);
+                    }
+                });
+            });
+            
+            // Analyze button
+            analyzeBtn.addEventListener('click', function() {
+                if (!uploadedFile) {
+                    alert('Please upload your resume first.');
+                    return;
+                }
+                
+                // Show loading state
+                loadingIndicator.style.display = 'block';
+                analyzeBtn.disabled = true;
+                
+                // Simulate API call delay
+                setTimeout(function() {
+                    // Analyze resume and generate results
+                    const jobResults = analyzeResumeAndGenerateResults(uploadedFile);
+                    
+                    // Update statistics
+                    updateStatistics(jobResults);
+                    
+                    // Display job results
+                    displayJobResults(jobResults);
+                    
+                    // Show results section
+                    resultsSection.style.display = 'block';
+                    
+                    // Hide loading indicator
+                    loadingIndicator.style.display = 'none';
+                    
+                    // Reset button
+                    analyzeBtn.disabled = false;
+                    
+                    // Scroll to results
+                    resultsSection.scrollIntoView({ behavior: 'smooth' });
+                }, 3000);
+            });
+            
+            // Function to show resume preview (simulated)
+            function showResumePreview(file) {
+                resumePreview.style.display = 'block';
+                
+                // Simulate reading file content
+                let previewText = "";
+                const fileName = file.name.toLowerCase();
+                
+                if (fileName.includes('software') || fileName.includes('developer') || fileName.includes('engineer')) {
+                    previewText = "John Doe\nSenior Software Engineer\n\nEXPERIENCE:\n- 5+ years as Full Stack Developer\n- Proficient in JavaScript, React, Node.js\n- Experience with AWS, Docker, Kubernetes\n- Led team of 5 developers on e-commerce project\n\nEDUCATION:\nB.Tech in Computer Science, IIT Delhi";
+                } else if (fileName.includes('data') || fileName.includes('analyst') || fileName.includes('scientist')) {
+                    previewText = "Jane Smith\nData Scientist\n\nEXPERIENCE:\n- 4 years in data analysis and machine learning\n- Proficient in Python, R, SQL, Tableau\n- Built predictive models for customer behavior\n- Experience with TensorFlow, PyTorch\n\nEDUCATION:\nM.Sc. in Data Science, University of Mumbai";
+                } else if (fileName.includes('devops') || fileName.includes('sre') || fileName.includes('cloud')) {
+                    previewText = "Robert Johnson\nDevOps Engineer\n\nEXPERIENCE:\n- 6+ years in cloud infrastructure and automation\n- AWS, Azure, GCP certified\n- CI/CD pipeline development with Jenkins, GitLab\n- Containerization with Docker and Kubernetes\n\nEDUCATION:\nB.E. in Computer Engineering, Pune University";
+                } else if (fileName.includes('marketing') || fileName.includes('seo') || fileName.includes('content')) {
+                    previewText = "Sarah Williams\nDigital Marketing Manager\n\nEXPERIENCE:\n- 5 years in digital marketing and brand strategy\n- SEO, SEM, Social Media Marketing expertise\n- Content strategy and campaign management\n- Increased organic traffic by 150% for previous employer\n\nEDUCATION:\nMBA in Marketing, Symbiosis Institute";
+                } else if (fileName.includes('finance') || fileName.includes('accounting') || fileName.includes('banking')) {
+                    previewText = "Michael Brown\nFinancial Analyst\n\nEXPERIENCE:\n- 4 years in financial analysis and reporting\n- Financial modeling and forecasting\n- Budget management and cost analysis\n- Investment portfolio analysis\n\nEDUCATION:\nB.Com (Hons), Delhi University";
+                } else {
+                    previewText = "Resume content preview not available for this file.\nThe AI will analyze the actual content during job matching.";
+                }
+                
+                resumePreviewContent.textContent = previewText;
+            }
+            
+            // Function to analyze resume and generate appropriate job matches
+            function analyzeResumeAndGenerateResults(file) {
+                const fileName = file.name.toLowerCase();
+                let jobCategory = "software"; // Default category
+                
+                // Determine job category based on file name or content
+                if (fileName.includes('data') || fileName.includes('analyst') || fileName.includes('scientist')) {
+                    jobCategory = "data";
+                } else if (fileName.includes('devops') || fileName.includes('sre') || fileName.includes('cloud')) {
+                    jobCategory = "devops";
+                } else if (fileName.includes('marketing') || fileName.includes('seo') || fileName.includes('content')) {
+                    jobCategory = "marketing";
+                } else if (fileName.includes('finance') || fileName.includes('accounting') || fileName.includes('banking')) {
+                    jobCategory = "finance";
+                }
+                
+                // Get jobs from the selected category
+                let jobs = [...jobDatabase[jobCategory]];
+                
+                // Add some random jobs from other categories for variety
+                Object.keys(jobDatabase).forEach(category => {
+                    if (category !== jobCategory && Math.random() > 0.7) {
+                        const randomJob = jobDatabase[category][Math.floor(Math.random() * jobDatabase[category].length)];
+                        // Adjust match percentage for less relevant jobs
+                        const adjustedJob = {...randomJob, match: Math.max(75, randomJob.match - 15)};
+                        jobs.push(adjustedJob);
+                    }
+                });
+                
+                // Sort by match percentage (highest first)
+                jobs.sort((a, b) => b.match - a.match);
+                
+                return jobs;
+            }
+            
+            // Function to update statistics
+            function updateStatistics(jobResults) {
+                const totalJobs = jobResults.length;
+                const avgMatch = Math.round(jobResults.reduce((sum, job) => sum + job.match, 0) / totalJobs);
+                const perfectMatches = jobResults.filter(job => job.match >= 95).length;
+                const platformsScanned = selectedPlatforms.length;
+                
+                document.getElementById('totalJobs').textContent = totalJobs;
+                document.getElementById('avgMatch').textContent = `${avgMatch}%`;
+                document.getElementById('perfectMatches').textContent = perfectMatches;
+                document.getElementById('platformsScanned').textContent = platformsScanned;
+            }
+            
+            // Function to display job results
+            function displayJobResults(jobResults) {
+                jobResultsContainer.innerHTML = '';
+                
+                jobResults.forEach(job => {
+                    const jobCard = document.createElement('div');
+                    jobCard.className = 'job-card';
+                    
+                    // Determine match class and progress class
+                    const matchClass = `match-${Math.floor(job.match / 5) * 5}`;
+                    const progressClass = `progress-${Math.floor(job.match / 5) * 5}`;
+                    
+                    // Create match badge text
+                    let matchText = '';
+                    if (job.match >= 95) matchText = 'PERFECT MATCH';
+                    else if (job.match >= 90) matchText = 'EXCELLENT MATCH';
+                    else if (job.match >= 85) matchText = 'STRONG MATCH';
+                    else if (job.match >= 80) matchText = 'GOOD MATCH';
+                    else matchText = 'FAIR MATCH';
+                    
+                    jobCard.innerHTML = `
+                        <div class="job-header">
+                            <div>
+                                <div class="job-title">${job.title}</div>
+                                <div class="company-info">${job.company}</div>
+                            </div>
+                            <div class="match-badge ${matchClass}">${job.match}% ${matchText}</div>
+                        </div>
+                        <div class="job-details">
+                            <div class="job-detail">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>${job.location}</span>
+                            </div>
+                            <div class="job-detail">
+                                <i class="fas fa-briefcase"></i>
+                                <span>${job.type}</span>
+                            </div>
+                            <div class="job-detail">
+                                <i class="fas fa-user-tie"></i>
+                                <span>${job.experience}</span>
+                            </div>
+                            <div class="job-detail">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <span>${job.salary}</span>
+                            </div>
+                            <div class="job-detail">
+                                <i class="fas fa-globe"></i>
+                                <span>${job.platforms.join(' • ')}</span>
+                            </div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress ${progressClass}"></div>
+                        </div>
+                        <div class="job-actions">
+                            <button class="action-btn apply-btn">Apply Now</button>
+                            <button class="action-btn save-btn">Save for Later</button>
+                            <button class="action-btn save-btn">View Details</button>
+                        </div>
+                    `;
+                    
+                    jobResultsContainer.appendChild(jobCard);
+                });
+                
+                // Add "Load More" button if there are many results
+                if (jobResults.length >= 5) {
+                    const loadMoreBtn = document.createElement('div');
+                    loadMoreBtn.style.textAlign = 'center';
+                    loadMoreBtn.style.marginTop = '20px';
+                    loadMoreBtn.innerHTML = `<button class="btn btn-outline">Load More Jobs</button>`;
+                    jobResultsContainer.appendChild(loadMoreBtn);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
